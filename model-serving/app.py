@@ -107,6 +107,7 @@ from flask_bootstrap import Bootstrap
 import pprint
 import logging
 from logging.config import dictConfig
+import time
 
 dictConfig({
     'version': 1,
@@ -230,9 +231,10 @@ def generate_internal(seed_text, num_words, model_info):
     model = model_info['model']
     model_name = model_info['model_name']
 
-    app.logger.info("Generating text using model : %s", model_name)
+    #app.logger.info("Generating text using model : %s", model_name)
 
     text = seed_text
+    t2a = time.perf_counter()
     for i in range(num_words):
         #print ('{} {} input text : {}'.format(model_name, i,text))
         token_list = tokenizer.texts_to_sequences([text])[0]
@@ -241,10 +243,10 @@ def generate_internal(seed_text, num_words, model_info):
         token_list = pad_sequences([token_list], maxlen=max_sequence_len-1, padding='pre')
         #print ('{} token_list padded: {}'.format(i, token_list))
         
-        t1 = time.perf_counter()
+        t1a = time.perf_counter()
         prediction_softmax = model.predict(token_list, verbose=0)
-        t2 = time.perf_counter()
-        #print ("#### prediction in {:,.2f} ms".format((t2-t1)*1e3))
+        t1b = time.perf_counter()
+        #print ("#### prediction in {:,.2f} ms".format((t1b-t1a)*1e3))
         predicted_idx = [ np.argmax(p) for p in prediction_softmax][0]
         
         #print ('{} {} predicted_idx : {}'.format(model_name, i, predicted_idx))
@@ -253,18 +255,22 @@ def generate_internal(seed_text, num_words, model_info):
         text += " " + output_word
         #print ('{} {} output_text: {}'.format (model_name, i, text))
         #print()
+    # --- end for loop
 
-    app.logger.info("   generated text :  %s", text)
+    t2b = time.perf_counter()
+    #print ("#### prediction in {:,.2f} ms".format((t2b-t2a)*1e3))
+    msg = "   model {}: generated text (in {:,.0f} ms):  {}".format(model_name, (t2b-t2a)*1e3, text)
+    app.logger.info(msg)
     return (text)
 
 
 def generate_text (seed_text, num_words):
     generated_texts = []
     for model_info in models_loaded:
-        t1 = time.perf_counter()
+        t1a = time.perf_counter()
         gen_text = generate_internal(seed_text, num_words, model_info)
-        t2 = time.perf_counter()
-        #print ("#### generate_text_internal in {:,.2f} ms".format((t2-t1)*1e3))
+        t1b = time.perf_counter()
+        #print ("#### generate_text_internal in {:,.2f} ms".format((t1b-t1a)*1e3))
         idx = gen_text.index(seed_text)
         gen_text_info = {
             'model_name' : model_info['model_name'],
@@ -282,7 +288,6 @@ def generate_text (seed_text, num_words):
 ### --------  end functions ----------
 
 
-import time
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -319,10 +324,10 @@ def index():
             #request.form['num_words'] = num_words
 
             # if all good, then go ahead
-            t1 = time.perf_counter()
+            t1a = time.perf_counter()
             generated_text_info = generate_text(seed_text, num_words)
-            t2 = time.perf_counter()
-            #print ("#### text generated in {:,.2f} ms".format((t2-t1)*1e3))
+            t1b = time.perf_counter()
+            #print ("#### text generated in {:,.2f} ms".format((t1b-t1a)*1e3))
 
             msg = pprint.pformat(generated_text_info, depth=2, indent=4)
             app.logger.debug(msg)
@@ -330,7 +335,7 @@ def index():
             params = {'seed_text' : seed_text, 'num_words' : num_words}
 
             return (render_template("index.html", 
-                    time_took = "{:,.2f}".format(t2-t1),
+                    time_took = "{:,.2f}".format(t1b-t1a),
                     warnings = warnings,
                     params = params,
                     generated_text_info = generated_text_info

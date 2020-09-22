@@ -9,7 +9,7 @@ rm -rf /home/ubuntu/logs/ && mkdir -p /home/ubuntu/logs && chown -R ubuntu:ubunt
 ## update git repo
 sudo -S -u ubuntu -i /bin/bash -l -c "\
 	cd /home/ubuntu/sotu ;  \
-	git fetch origin --tags; git checkout --force ${git_deploy_tag} ; \
+	git fetch origin --tags -f; git checkout --force ${git_deploy_tag} ; \
 	git pull ; echo ; git status ; \
        	echo"  > /home/ubuntu/logs/sotu-repo-update.out 2>&1
 
