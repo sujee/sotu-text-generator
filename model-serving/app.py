@@ -13,60 +13,90 @@ models_info = [
         'vocab_file' : 'models/sotu-clinton-vocab.json',
         'max_sequence_len' : 284
     },
-    {
-        'model_name' : 'clinton-2',
-        'model_file' : 'models/sotu-clinton-model-2.h5',
-        'vocab_file' : 'models/sotu-clinton-vocab.json',
-        'max_sequence_len' : 284
-    },
+    # {
+    #     'model_name' : 'clinton-2',
+    #     'model_file' : 'models/sotu-clinton-model-2.h5',
+    #     'vocab_file' : 'models/sotu-clinton-vocab.json',
+    #     'max_sequence_len' : 284
+    # },
+    # {
+    #     'model_name' : 'clinton-3',
+    #     'model_file' : 'models/sotu-clinton-model-3.h5',
+    #     'vocab_file' : 'models/sotu-clinton-vocab.json',
+    #     'max_sequence_len' : 284
+    # },
     {
         'model_name' : 'gwbush-1',
         'model_file' : 'models/sotu-gwbush-model-1.h5',
         'vocab_file' : 'models/sotu-gwbush-vocab.json',
         'max_sequence_len' : 182
     },
-    {
-        'model_name' : 'gwbush-2',
-        'model_file' : 'models/sotu-gwbush-model-2.h5',
-        'vocab_file' : 'models/sotu-gwbush-vocab.json',
-        'max_sequence_len' : 182
-    },
+    # {
+    #     'model_name' : 'gwbush-2',
+    #     'model_file' : 'models/sotu-gwbush-model-2.h5',
+    #     'vocab_file' : 'models/sotu-gwbush-vocab.json',
+    #     'max_sequence_len' : 182
+    # },
+    # {
+    #     'model_name' : 'gwbush-3',
+    #     'model_file' : 'models/sotu-gwbush-model-3.h5',
+    #     'vocab_file' : 'models/sotu-gwbush-vocab.json',
+    #     'max_sequence_len' : 182
+    # },
     {
         'model_name' : 'obama-1',
         'model_file' : 'models/sotu-obama-model-1.h5',
         'vocab_file' : 'models/sotu-obama-vocab.json',
         'max_sequence_len' : 132,
     },
-    {
-        'model_name' : 'obama-2',
-        'model_file' : 'models/sotu-obama-model-2.h5',
-        'vocab_file' : 'models/sotu-obama-vocab.json',
-        'max_sequence_len' : 132,
-    },
+    # {
+    #     'model_name' : 'obama-2',
+    #     'model_file' : 'models/sotu-obama-model-2.h5',
+    #     'vocab_file' : 'models/sotu-obama-vocab.json',
+    #     'max_sequence_len' : 132,
+    # },
+    # {
+    #     'model_name' : 'obama-3',
+    #     'model_file' : 'models/sotu-obama-model-3.h5',
+    #     'vocab_file' : 'models/sotu-obama-vocab.json',
+    #     'max_sequence_len' : 132,
+    # },
     {
         'model_name' : 'trump-1',
         'model_file' : 'models/sotu-trump-model-1.h5',
         'vocab_file' : 'models/sotu-trump-vocab.json',
         'max_sequence_len' : 159
     },
-    {
-        'model_name' : 'trump-2',
-        'model_file' : 'models/sotu-trump-model-2.h5',
-        'vocab_file' : 'models/sotu-trump-vocab.json',
-        'max_sequence_len' : 159
-    },
+    # {
+    #     'model_name' : 'trump-2',
+    #     'model_file' : 'models/sotu-trump-model-2.h5',
+    #     'vocab_file' : 'models/sotu-trump-vocab.json',
+    #     'max_sequence_len' : 159
+    # },
+    # {
+    #     'model_name' : 'trump-3',
+    #     'model_file' : 'models/sotu-trump-model-3.h5',
+    #     'vocab_file' : 'models/sotu-trump-vocab.json',
+    #     'max_sequence_len' : 159
+    # },
     {
         'model_name' : 'last4-1',
         'model_file' : 'models/sotu-last4-model-1.h5',
         'vocab_file' : 'models/sotu-last4-vocab.json',
         'max_sequence_len' : 284
     },
-    {
-        'model_name' : 'last4-2',
-        'model_file' : 'models/sotu-last4-model-2.h5',
-        'vocab_file' : 'models/sotu-last4-vocab.json',
-        'max_sequence_len' : 284
-    },
+    # {
+    #     'model_name' : 'last4-2',
+    #     'model_file' : 'models/sotu-last4-model-2.h5',
+    #     'vocab_file' : 'models/sotu-last4-vocab.json',
+    #     'max_sequence_len' : 284
+    # },
+    # {
+    #     'model_name' : 'last4-3',
+    #     'model_file' : 'models/sotu-last4-model-3.h5',
+    #     'vocab_file' : 'models/sotu-last4-vocab.json',
+    #     'max_sequence_len' : 284
+    # },
 
 ]
 
@@ -211,7 +241,10 @@ def generate_internal(seed_text, num_words, model_info):
         token_list = pad_sequences([token_list], maxlen=max_sequence_len-1, padding='pre')
         #print ('{} token_list padded: {}'.format(i, token_list))
         
+        t1 = time.perf_counter()
         prediction_softmax = model.predict(token_list, verbose=0)
+        t2 = time.perf_counter()
+        #print ("#### prediction in {:,.2f} ms".format((t2-t1)*1e3))
         predicted_idx = [ np.argmax(p) for p in prediction_softmax][0]
         
         #print ('{} {} predicted_idx : {}'.format(model_name, i, predicted_idx))
@@ -228,7 +261,10 @@ def generate_internal(seed_text, num_words, model_info):
 def generate_text (seed_text, num_words):
     generated_texts = []
     for model_info in models_loaded:
+        t1 = time.perf_counter()
         gen_text = generate_internal(seed_text, num_words, model_info)
+        t2 = time.perf_counter()
+        #print ("#### generate_text_internal in {:,.2f} ms".format((t2-t1)*1e3))
         idx = gen_text.index(seed_text)
         gen_text_info = {
             'model_name' : model_info['model_name'],
@@ -246,6 +282,7 @@ def generate_text (seed_text, num_words):
 ### --------  end functions ----------
 
 
+import time
 
 @app.route('/', methods=('GET', 'POST'))
 def index():
@@ -282,7 +319,10 @@ def index():
             #request.form['num_words'] = num_words
 
             # if all good, then go ahead
+            t1 = time.perf_counter()
             generated_text_info = generate_text(seed_text, num_words)
+            t2 = time.perf_counter()
+            #print ("#### text generated in {:,.2f} ms".format((t2-t1)*1e3))
 
             msg = pprint.pformat(generated_text_info, depth=2, indent=4)
             app.logger.debug(msg)
@@ -290,6 +330,7 @@ def index():
             params = {'seed_text' : seed_text, 'num_words' : num_words}
 
             return (render_template("index.html", 
+                    time_took = "{:,.2f}".format(t2-t1),
                     warnings = warnings,
                     params = params,
                     generated_text_info = generated_text_info

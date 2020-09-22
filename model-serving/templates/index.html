@@ -45,7 +45,10 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 
+    Be patient, it takes 10-20 seconds for the text to be generated
+
 </form>
+
 
 <div>
     <h2>Generated Text</h2>
@@ -65,6 +68,11 @@
     {% endif %}
     </p>
 
+    <p>
+    {% if time_took %}
+    Generated in : {{ time_took }} seconds
+    {% endif %}
+    </p>
 
     {% if generated_text_info %}
 
