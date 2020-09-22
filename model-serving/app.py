@@ -102,12 +102,13 @@ models_info = [
 
 ## --- end config ----
 
-from flask import Flask, render_template,  Response, request, url_for, flash, redirect
+from flask import Flask, render_template,  Response, request, url_for, flash, redirect, jsonify
 from flask_bootstrap import Bootstrap
 import pprint
 import logging
 from logging.config import dictConfig
 import time
+import json
 
 dictConfig({
     'version': 1,
@@ -164,8 +165,6 @@ set_session(sess)
 ## ======== end tensorflow init ===========
 
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
-
-import json 
 
 ## ---- init ------
 
@@ -261,14 +260,15 @@ def generate_internal(seed_text, num_words, model_info):
     #print ("#### prediction in {:,.2f} ms".format((t2b-t2a)*1e3))
     msg = "   model {}: generated text (in {:,.0f} ms):  {}".format(model_name, (t2b-t2a)*1e3, text)
     app.logger.info(msg)
-    return (text)
+    return text, (t2b-t2a)*1e3
+# === end def generate_internal
 
 
 def generate_text (seed_text, num_words):
     generated_texts = []
     for model_info in models_loaded:
         t1a = time.perf_counter()
-        gen_text = generate_internal(seed_text, num_words, model_info)
+        gen_text, time_took_ms = generate_internal(seed_text, num_words, model_info)
         t1b = time.perf_counter()
         #print ("#### generate_text_internal in {:,.2f} ms".format((t1b-t1a)*1e3))
         idx = gen_text.index(seed_text)
@@ -277,7 +277,8 @@ def generate_text (seed_text, num_words):
             'seed_text' : seed_text, 
             'num_words' : num_words,
             'generated_text' : gen_text,
-            'generated_text2' : gen_text[idx + len(seed_text) : ]
+            'generated_text2' : gen_text[idx + len(seed_text) : ], 
+            'time_took_ms' : time_took_ms
         }
         generated_texts.append(gen_text_info)
     # --- end for model in models:
@@ -334,11 +335,12 @@ def index():
 
             params = {'seed_text' : seed_text, 'num_words' : num_words}
 
+
             return (render_template("index.html", 
                     time_took = "{:,.2f}".format(t1b-t1a),
                     warnings = warnings,
                     params = params,
-                    generated_text_info = generated_text_info
+                    generated_text_info = generated_text_info,
                     ))
 
         return (render_template("index.html"))
@@ -346,7 +348,55 @@ def index():
     except Exception as e:
         print (str(e))
         ## TODO render index template with error
+# === end def index():
 
+
+@app.route('/json', methods=('GET', 'POST'))
+def json():
+        seed_text = ''
+        num_words_default = 20
+
+        result = {}
+
+        seed_text = request.args.get('seed_text')
+        num_words = request.args.get('num_words')
+
+        if seed_text:
+            try:
+                num_words = int(num_words)
+            except Exception:
+                num_words = num_words_default
+
+            # lowercase the seed text
+            seed_text = seed_text.lower()
+
+            warnings = []
+            ## put some limits in
+            if len(seed_text) > SEED_TEXT_MAX_LENGTH:
+                seed_text = seed_text[:SEED_TEXT_MAX_LENGTH]
+                warnings.append('Seed text truncated to ' + str(SEED_TEXT_MAX_LENGTH))
+
+            if  num_words > NUM_WORDS_MAX:
+                num_words = NUM_WORDS_MAX
+                warnings.append('num_words capped at ' + str(NUM_WORDS_MAX))
+
+
+            # if all good, then go ahead
+            t1a = time.perf_counter()
+            generated_text_info = generate_text(seed_text, num_words)
+            t1b = time.perf_counter()
+
+            params = {'seed_text' : seed_text, 'num_words' : num_words}
+
+            result = {
+                'time_took_ms' : (t1b-t1a)*1e3,
+                'warnings' : warnings,
+                'params' : params,
+                'generated_text_info' : generated_text_info
+            }
+        # -- end if (seed_text)
+        return jsonify(result)
+# === end: def json():
 
 
 if __name__ == "__main__":
