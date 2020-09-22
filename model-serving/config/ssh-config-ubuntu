@@ -1,0 +1,5 @@
+# file : ~/.ssh/config
+Host github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/sotu-deploy.pem

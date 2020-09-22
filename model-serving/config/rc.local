@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#git_deploy_tag="prod"
+git_deploy_tag="master"
+
+## make logs dir and clear it
+rm -rf /home/ubuntu/logs/ && mkdir -p /home/ubuntu/logs && chown -R ubuntu:ubuntu /home/ubuntu/logs
+
+## update git repo
+sudo -S -u ubuntu -i /bin/bash -l -c "\
+	cd /home/ubuntu/sotu ;  \
+	git fetch origin --tags; git checkout --force ${git_deploy_tag} ; \
+	git pull ; echo ; git status ; \
+       	echo"  > /home/ubuntu/logs/sotu-repo-update.out 2>&1
+
+
+
+# run docker
+sudo -S -u ubuntu -i /bin/bash -l -c "\
+	cd /home/ubuntu/sotu/model-serving; \
+	./build-docker.sh ; \
+	echo ; \
+	./run-docker.sh ; \
+	echo \"done\" ; " > /home/ubuntu/logs/docker.out 2>&1   &
+
+
+exit 0

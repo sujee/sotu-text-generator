@@ -50,6 +50,8 @@ hostname : sotu.elephantscale.com
 
 from https://docs.docker.com/engine/install/ubuntu/
 
+```bash
+
 $  sudo apt-get remove docker docker-engine docker.io containerd runc
 
 $   sudo apt-get install -y \
@@ -78,3 +80,33 @@ $ sudo usermod -aG docker $(whoami)
 $ docker images
 
 $  docker run hello-world
+
+```
+
+### Setup SSH deploykey
+
+deploy key is : sotu-deploy.pem
+
+scp this key into : ~/.ssh/sotu-deploy.pem
+
+And create a file like this:
+
+```
+# file : ~/.ssh/config
+Host github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/sotu-deploy.pem
+```
+
+```bash
+    $   ssh-keyscan github.com >> ${HOME_DIR}/.ssh/known_hosts
+```
+
+Test it like this:
+
+```bash
+    $ chmod 600 ~/.ssh/*
+
+    $  ssh -T git@github.com
+```
