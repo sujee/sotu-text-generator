@@ -1,5 +1,8 @@
 FROM tensorflow/tensorflow:latest
 
+# upgrade pip3
+RUN /usr/bin/python3 -m pip install --upgrade pip
+#RUN pip3 install --upgrade pip3
 
 RUN pip3 install numpy pandas 
 RUN pip3 install scikit-learn 
