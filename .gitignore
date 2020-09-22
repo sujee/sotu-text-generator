@@ -3,6 +3,8 @@
 .DS_Store
 model.png
 
+model-checkpoints
+
 # python
 __pycache__
 .ipynb_checkpoints

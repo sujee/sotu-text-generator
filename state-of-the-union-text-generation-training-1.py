@@ -335,11 +335,11 @@ def train_model(model_name, model_version, model, xs, ys):
 
     cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', min_delta=0.01, patience=10, verbose=1)
 
-    checkpoint_path = os.path.join("model-checkpoints" , model_name + '-' + model_version,  "/model.ckpt")
+    checkpoint_path = os.path.join("model-checkpoints" , model_name + '-' + model_version,  "model.ckpt")
     os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
     cb_checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  save_weights_only=True,
-                                                 verbose=1)
+                                                 verbose=2)
 
     ## train with validation
     t1 = time.perf_counter()
