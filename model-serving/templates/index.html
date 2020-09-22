@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} State of the Union Speech Generator {% endblock %}</h1>
+
+    <p>
+        This is a simple neural network that is trained on past 'state of the union' speeches.  <br />
+        Give it some 'starter text' and see what it comes up with! <br />
+
+        Compare the generated text from various models!  
+    </p>
+
+    <p>
+    Enter some text to get started!  Example texts are:
+    </p>
+    <p>
+    <i>american dream</i>  ,  &nbsp;  &nbsp;  <i>american workers</i>  , &nbsp; &nbsp;  <i>health care</i>  ,  &nbsp;  &nbsp;  <i>climate change</i> ,  &nbsp;  &nbsp;  <i>terrorists</i>  , &nbsp;  &nbsp;  <i>bin laden</i>
+    </p>
+    <p>
+        Have fun !
+    </p>
+
+    <hr>
+
+    <form method="post">
+    <div class="form-group">
+        <label for="title">Starter text</label>
+        <input type="text" name="seed_text"
+               placeholder="Seed text" class="form-control"
+               value="{{ request.form['seed_text'] }}"></input>
+               <!-- TODO default value is 'hello' -->
+    </div>
+
+    <div class="form-group">
+        <label for="content">Number of words</label>
+        <input type="text" name="num_words"
+               placeholder="20" class="form-control"
+               value="{{ request.form['num_words'] }}"></input>
+               <!-- TODO default value is 10 -->
+    </div>
+
+   
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>
+
+<div>
+    <h2>Generated Text</h2>
+
+    <!-- <img class="col-sm-3 col-sm-offset-4" src="{{ url_for('static',
+  filename='spinner.gif') }}" ng-show="loading"> -->
+
+    {% if warnings|length > 0 %}
+    <p>
+    Warnings : {{ warnings }}
+    </p>
+    {% endif %}
+
+    <p>
+    {% if params %}
+    Parameters : {{ params }}
+    {% endif %}
+    </p>
+
+
+    {% if generated_text_info %}
+
+        {% for gen_text_info in generated_text_info  %}
+            <p>
+           <b><u>Model: {{ gen_text_info ['model_name'] }} </u></b> <br/>
+           <b><mark>{{ gen_text_info['seed_text']}}</mark></b> {{  gen_text_info['generated_text2']}}
+           </p>
+        {% endfor %}
+    
+    {% endif %}
+
+    <hr>
+</div>
+
+
+{% endblock %}
