@@ -19,6 +19,7 @@ COPY app.py ${APP_DIR}/app.py
 COPY wsgi.py ${APP_DIR}/wsgi.py
 COPY templates/ ${APP_DIR}/templates/
 COPY static/ ${APP_DIR}/static/
+RUN echo "hi2"
 COPY models/ ${APP_DIR}/models/
 
 WORKDIR  ${APP_DIR}
