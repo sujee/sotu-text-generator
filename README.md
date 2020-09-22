@@ -46,7 +46,7 @@ A flask application in `model-serving` directory.  See [model-serving/README.md]
 I wanted to experiment with various models.  
 Pretty much all models overfit (large degree)
 
-### Text charecteristics
+### Data charecteristics
 
 | Data    | Total number of words | Total unique words | max sequence len |
 |---------|-----------------------|--------------------|------------------|
@@ -77,7 +77,8 @@ model.compile(loss='categorical_crossentropy',
               optimizer = 'adam',
               metrics=['accuracy'])
 
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', min_delta=0.01, patience=10, verbose=1)
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+                          min_delta=0.01, patience=10, verbose=1)
 
 history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
@@ -114,12 +115,21 @@ model.compile(loss='categorical_crossentropy',
               optimizer = 'adam',
               metrics=['accuracy'])
 
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', min_delta=0.05, patience=20, verbose=2)
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+                        min_delta=0.05, patience=20, verbose=2)
 
 history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
+
+| Data    | Number of parameters | Total Epochs before early stopping | Accuracy % | Training Time                                    |
+|---------|----------------------|------------------------------------|------------|--------------------------------------------------|
+| Clinton | 1,219,750            | 148                                | 91.35      | 3 hours, 21 minutes and 25.89 seconds            |
+| GWBush  | 1,259,825            | 129                                | 94.72      | 1 hour, 38 minutes and 45.70 seconds             |
+| Obama   | 1,318,449            | 165                                | 87.41      | 2 hours, 19 minutes and 3.25 seconds             |
+| Trump   | 993,727              | 136                                | 93.24      | 51 minutes and 54.15 seconds                     |
+| all     | 2,229,182            | 100                                | 59.06      | size = 26,822,768 bytes / 26,194.1 KB  / 25.6 MB |
 
 
 <img src="plots/sotu-clinton-2.png" style="width:40%;" />
@@ -145,13 +155,25 @@ model.compile(loss='categorical_crossentropy',
               optimizer = 'adam',
               metrics=['accuracy'])
 
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', min_delta=0.05, patience=20, verbose=2)
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+                        min_delta=0.05, patience=20, verbose=2)
 
 history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
 
+| Data    | Number of parameters | Total Epochs before early stopping | Accuracy % | Training Time                         |
+|---------|----------------------|------------------------------------|------------|---------------------------------------|
+| Clinton | 1,219,750            | 176                                | 77.44      | 4 hours, 25 minutes and 0.92 seconds  |
+| GWBush  | 1,259,825            | 174                                | 81.99      | 2 hours, 18 minutes and 40.00 seconds |
+| Obama   | 1,318,449            | 152                                | 73.32      | 2 hours, 9 minutes and 36.04 seconds  |
+| Trump   | 993,727              | 158                                | 86.68      | 56 minutes and 41.30 seconds          |
+| all     | 2,229,182            |                                    |            |                                       |
 
 
-
+<img src="plots/sotu-clinton-3.png" style="width:40%;" />
+<img src="plots/sotu-gwbush-3.png" style="width:40%;" />
+<img src="plots/sotu-obama-3.png" style="width:40%;" />
+<img src="plots/sotu-trump-3.png" style="width:40%;" />
+<img src="plots/sotu-last4-3.png" style="width:40%;" />
