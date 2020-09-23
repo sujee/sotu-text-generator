@@ -23,6 +23,8 @@
         I wanted to do different kind of text generator, so I choose <a href="https://en.wikipedia.org/wiki/State_of_the_Union">state of the union</a> texts.  You can download the <a href="https://www.kaggle.com/rtatman/state-of-the-union-corpus-1989-2017">dataset from Kaggle</a>.  And <a href="https://github.com/sujee/sotu-text-generator">My slimmed down dataset is here</a>
     </p>
 
+    <a href="https://github.com/sujee/sotu-text-generator">Git repo with all the code</a>
+
     <h2>Idea</h2>
     <p>
     Original idea was to write a simple neural network and train it on existing text corpus.  And have it generate some text given some 'starter text' (or 'seed text'). 
@@ -72,6 +74,7 @@
         </p>
 
         <h3> Step 3 - Model Performance</h3>
+
         I built different models for each corpus, as I figured each president has a different speaking style.  I processed sotu text from 4 presidents:
         <ul>
             <li>Bill Clinton </li>
@@ -108,6 +111,11 @@
             For the large part, all the models suffered from heavy overfit problem.  It is understandable, as the amount of data each model is training on is fairly small.  You can see the learning curves below. <br/>
             The models overfit to close 90% accuracy , while the validation accuracy is stuck at 10%
         </p>
+        
+        <p>
+        You can view detailed experimantal notes in the <a href="https://github.com/sujee/sotu-text-generator">project github</a>
+        </p>
+
 
         <img   style="width:50%; float:left;"  src="{{ url_for('static', filename='sotu-clinton-1.png') }}" />
         <img   style="width:50%; float:right;"  src="{{ url_for('static', filename='sotu-gwbush-1.png') }}" />
