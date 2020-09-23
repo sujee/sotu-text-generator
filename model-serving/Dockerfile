@@ -22,5 +22,6 @@ COPY static/ ${APP_DIR}/static/
 RUN echo "hi2"
 COPY models/ ${APP_DIR}/models/
 
+RUN echo "hi3"
 WORKDIR  ${APP_DIR}
-ENTRYPOINT ["gunicorn", "--workers", "2", "--bind", "0.0.0.0", "wsgi:app"]
+ENTRYPOINT ["gunicorn", "--workers", "2", "--timeout", "90",  "--bind", "0.0.0.0", "wsgi:app"]
