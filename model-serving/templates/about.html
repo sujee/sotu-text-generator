@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} About the State of the Union Speech Generator {% endblock %}</h1>
+
+    <p>
+
+    <img  style="float:right"  src="{{ url_for('static', filename='sujee-3_small.jpg') }}" >
+
+        Hiya, I am  <a href="https://elephantscale.com/our-team/sujee-maniyam/">Sujee Maniyam</a> - a ML Engineer, instructor and founder at <a href="https://elephantscale.com/">Elephant Scale</a> <br/>
+        I put together this (hopefully) fun demo while learning <b>deep learning for NLP</b>
+    </p>
+
+    <p>
+        If you want to reach out to me, plesae email me at sujee-at-elephantscale-dot-com  or <a href="https://twitter.com/sujeenet">@sujeenet</a>
+    </p>
+
+    <p>
+    This started as an inspiration from  <a href='https://github.com/lmoroney/dlaicourse/blob/master/TensorFlow%20In%20Practice/Course%203%20-%20NLP/NLP_Week4_Exercise_Shakespeare_Answer.ipynb'>Laurence Moroney's Shakespeare Notebook</a>.  But then quickly took a life of its own, spanning multiple days experimenting :-)
+    </p>
+
+    <p>
+        I wanted to do different kind of text generator, so I choose <a href="https://en.wikipedia.org/wiki/State_of_the_Union">state of the union</a> texts.  You can download the <a href="https://www.kaggle.com/rtatman/state-of-the-union-corpus-1989-2017">dataset from Kaggle</a>.  And <a href="https://github.com/sujee/sotu-text-generator">My slimmed down dataset is here</a>
+    </p>
+
+    <h2>Idea</h2>
+    <p>
+    Original idea was to write a simple neural network and train it on existing text corpus.  And have it generate some text given some 'starter text' (or 'seed text'). 
+    </p>
+    <p>
+        But it quickly morphed into much more than that :-) 
+
+        <ul>
+            <li>Try out a few models and measure their performances in a systematic way</li>
+            <li>Move from notebook based experiments to python scripts that run non-interactively</li>
+            <li>Build a web application deploying the model in the cloud</li>
+            <li>Experiment with model serving architectures</li>
+            <li>Finally really exercise the power of my GPU (Nvidia GTX 2070) :-) </li>
+        </ul>
+    </p>
+
+    <h2>Workflow</h2>
+        My basic workflow is follows:
+        <p>
+        <h3>Step 1 - Training phase 1</h3>
+        <ul>
+            <li>I started with a notebook for training</li>
+            <li>The training took many minutes to couple of hours</li>
+            <li>I saved the model, so I don't have to redo training every time</li>
+            <li>Wrote another notebook for loading the model and testing</li>
+            <li>I did a lot of experiments here with Tensorboard to get an idea of how the model is doing</li>
+        </ul>
+        </p>
+
+        <p>
+        <h3>Step - 2 -  Training phase 2</h3>
+        In previous step, I was interactively running the code in the notebook.  In this phase, I wanted to automate as much training as possible.
+        <ul>
+            <li>I converted the notebook to python script</li>
+            <li>This script would loop through various models and data</li>
+            <li>It will save the experiment results so I can look at later (e.g. models and learning curves)</li>
+            <li>I versioned each model I was experimenting with.  So the model would be saved as 'model-1.h5'</li>
+            <li>Also the learning curve for that training run will be saved with similar name ('learning-curve-1.png')</li>
+        </ul>
+        This was really a fun part.  The full run would go for 15 hours+.  So I can just kickoff the training and either do other work, or go to bed.  And check the results the next day :-) 
+
+        <img   src="{{ url_for('static', filename='glances-1.png') }}" />
+        <br />
+        <br />
+
+        <img   src="{{ url_for('static', filename='gpustat-1.png') }}" />
+        </p>
+
+        <h3> Step 3 - Model Performance</h3>
+        I built different models for each corpus, as I figured each president has a different speaking style.  I processed sotu text from 4 presidents:
+        <ul>
+            <li>Bill Clinton </li>
+            <li>George W Bush</li>
+            <li>Barrack Obama</li>
+            <li>Donald Trump</li>
+        </ul>
+
+        
+        <p>
+        So I built 5 models, one trained  on each president's speeches and another model (called 'last4' as in last 4 presidents) that was trained on the entire corpus.
+        </p>
+
+        <pre>
+            # here is a sample model
+
+            ## model 1
+            model_version = "1"
+            model = Sequential([
+                        Embedding(input_dim=num_unique_words, output_dim=100, input_length=max_sequence_len-1),
+                        Bidirectional(LSTM(64)),
+                        Dense(num_unique_words, activation='softmax')
+                ])
+
+            model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['accuracy'])
+
+        </pre>
+
+        <p>
+        The idea is to generate text using each of the models and compare the results :-)  And there are some funny patterns you can observe!
+        </p>
+
+        <p>
+            For the large part, all the models suffered from heavy overfit problem.  It is understandable, as the amount of data each model is training on is fairly small.  You can see the learning curves below. <br/>
+            The models overfit to close 90% accuracy , while the validation accuracy is stuck at 10%
+        </p>
+
+        <img   style="width:50%; float:left;"  src="{{ url_for('static', filename='sotu-clinton-1.png') }}" />
+        <img   style="width:50%; float:right;"  src="{{ url_for('static', filename='sotu-gwbush-1.png') }}" />
+        <img   style="width:50%; float:left;"  src="{{ url_for('static', filename='sotu-obama-1.png') }}" />
+        <img   style="width:50%; float:right;"  src="{{ url_for('static', filename='sotu-trump-1.png') }}" />
+        <img   style="width:50%; float:left;"  src="{{ url_for('static', filename='sotu-last4-1.png') }}" />
+
+        <br clear="all" />
+
+
+        <h3>Step 4 - Model Serving</h3>
+
+        <p>
+        Once the training is done, I wanted to 'deploy the model'.  I choose Flask framework as it is easy to get started and plus there are lot of online guides on how to do model deployment on Flask.
+        </p>
+
+        <p>
+            This website is built on Flask!
+        </p>
+
+        <h3> Step 5 - Deploy to Cloud</h3>
+        Once the model server is up and running, I wanted to do the final step of deploying the service on to a cloud platform.
+
+        <h4>Deploy - Phase 1</h4>
+        <ul>
+            <li>I picked Google Cloud as I already had an account there</li>
+            <li>I containerized my model serving application using Docker, so it is easily deployed</li>
+            <li>I deployed my dockerized app, on a VM instance on GCP (this one!)</li>
+        </ul>
+        
+        <h4>Deploy - Phase 2</h4>
+        Next steps are deploying the application container using cloud native containerized service.
+
+{% endblock %}

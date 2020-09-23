@@ -398,6 +398,10 @@ def json():
         return jsonify(result)
 # === end: def json():
 
+@app.route('/about', methods=('GET', 'POST'))
+def about():
+    return (render_template("about.html"))
+# === end about
 
 if __name__ == "__main__":
     app.run()
