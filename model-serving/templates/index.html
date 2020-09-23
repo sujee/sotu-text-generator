@@ -26,7 +26,7 @@
 
     <hr>
 
-    <form method="post">
+    <form id="input_form"  method="post" >
     <div class="form-group">
         <label for="title">Starter text</label>
         <input type="text" name="seed_text"
@@ -46,7 +46,7 @@
    
 
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button id="btnSubmit"   type="submit" class="btn btn-primary">Submit</button>
     </div>
 
     Be patient, it takes 10-20 seconds for the text to be generated
@@ -92,5 +92,21 @@
     <hr>
 </div>
 
-
 {% endblock %}
+
+{% block optional_js  %}  
+<script>
+    $(document).ready(function() {
+    $("#btnSubmit").click(function() {
+      // disable button
+      $(this).prop("disabled", true);
+      // add spinner to button
+      $(this).html(
+        `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...`
+      );
+      $("#input_form").submit()
+    });
+});
+</script>
+{%  endblock %}
+
