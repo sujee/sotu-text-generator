@@ -9,18 +9,9 @@ We have 5 language models
 - Trump
 - All of it (last4)
 
-
-
 See below for notes.
 
-Useful links
-- https://towardsdatascience.com/devops-for-data-science-with-gcp-3e6b5c3dd4f6
-
-## Installing required packages
-
-```bash
-    $  conda install humanize
-```
+[README-dev.md](README-dev.md) has more developer notes
 
 ## Workflow
 
@@ -55,7 +46,6 @@ Pretty much all models overfit (large degree)
 | Obama   | 53,895                | 4,957              | 132              |
 | Trump   | 22,349                | 3,539              | 159              |
 | all     | 172,503               | 8,934              | 284              |
-
 
 
 ### Model 1 - Smaller Model
