@@ -129,7 +129,7 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
 | GWBush  | 1,259,825            | 129                                | 94.72      | 1 hour, 38 minutes and 45.70 seconds             |
 | Obama   | 1,318,449            | 165                                | 87.41      | 2 hours, 19 minutes and 3.25 seconds             |
 | Trump   | 993,727              | 136                                | 93.24      | 51 minutes and 54.15 seconds                     |
-| all     | 2,229,182            | 100                                | 59.06      | size = 26,822,768 bytes / 26,194.1 KB  / 25.6 MB |
+| all     | 2,229,182            | 100                                | 59.06      | 7 hours, 34 minutes and 17.98 seconds            |
 
 
 <img src="plots/sotu-clinton-2.png" style="width:40%;" />
@@ -139,7 +139,7 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
 <img src="plots/sotu-last4-2.png" style="width:40%;" />
 
 
-## Experiment 3 - 2 biLSTMs + Dropout
+## Model 3 - 2 biLSTMs + Dropout
 
 ```python
 
@@ -169,11 +169,46 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
 | GWBush  | 1,259,825            | 174                                | 81.99      | 2 hours, 18 minutes and 40.00 seconds |
 | Obama   | 1,318,449            | 152                                | 73.32      | 2 hours, 9 minutes and 36.04 seconds  |
 | Trump   | 993,727              | 158                                | 86.68      | 56 minutes and 41.30 seconds          |
-| all     | 2,229,182            |                                    |            |                                       |
-
+| all     | 2,229,182            | 117                                | 41.79      | 6 hours, 25 minutes and 27.42 seconds |
 
 <img src="plots/sotu-clinton-3.png" style="width:40%;" />
 <img src="plots/sotu-gwbush-3.png" style="width:40%;" />
 <img src="plots/sotu-obama-3.png" style="width:40%;" />
 <img src="plots/sotu-trump-3.png" style="width:40%;" />
 <img src="plots/sotu-last4-3.png" style="width:40%;" />
+
+
+## Model 4 - biLSTM + DropOut + LSTM + Dense
+
+This is from [Laurence Moroney's Shakespeare notebook](https://github.com/lmoroney/dlaicourse/blob/master/TensorFlow%20In%20Practice/Course%203%20-%20NLP/NLP_Week4_Exercise_Shakespeare_Answer.ipynb)
+
+```python
+from tensorflow.keras import regularizers
+
+## Model 4: from https://github.com/lmoroney/dlaicourse/blob/master/TensorFlow%20In%20Practice/Course%203%20-%20NLP/NLP_Week4_Exercise_Shakespeare_Answer.ipynb
+    model_version = "4"
+    model = Sequential( [
+        Embedding(num_unique_words, 100, input_length=max_sequence_len-1),
+        Bidirectional(LSTM(150, return_sequences = True)),
+        Dropout(0.2),
+        LSTM(100),
+        Dense(num_unique_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
+        Dense(num_unique_words, activation='softmax')
+    ])
+model.compile(loss='categorical_crossentropy', 
+        optimizer = 'adam',
+        # optimizer = Adam(lr=0.01)
+        metrics=['accuracy'])
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+                        min_delta=0.05, patience=20, verbose=2)
+
+history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
+                    verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
+
+```
+
+<img src="plots/sotu-clinton-4.png" style="width:40%;" />
+<img src="plots/sotu-gwbush-4.png" style="width:40%;" />
+<img src="plots/sotu-obama-4.png" style="width:40%;" />
+<img src="plots/sotu-trump-4.png" style="width:40%;" />
+<img src="plots/sotu-last4-4.png" style="width:40%;" />
