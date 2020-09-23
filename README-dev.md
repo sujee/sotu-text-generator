@@ -20,7 +20,10 @@ $   git commit
 
 $   git push origin
 
-# tag as r-version
+#  See what tags we have
+$  git tag 
+
+# increment tag
 $   git tag -a r-007
 #  Enter comment
 

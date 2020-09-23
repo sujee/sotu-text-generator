@@ -25,6 +25,12 @@ models_info = [
     #     'vocab_file' : 'models/sotu-clinton-vocab.json',
     #     'max_sequence_len' : 284
     # },
+    # {
+    #     'model_name' : 'clinton-4',
+    #     'model_file' : 'models/sotu-clinton-model-4.h5',
+    #     'vocab_file' : 'models/sotu-clinton-vocab.json',
+    #     'max_sequence_len' : 284
+    # },
     {
         'model_name' : 'gwbush-1',
         'model_file' : 'models/sotu-gwbush-model-1.h5',
@@ -40,6 +46,12 @@ models_info = [
     # {
     #     'model_name' : 'gwbush-3',
     #     'model_file' : 'models/sotu-gwbush-model-3.h5',
+    #     'vocab_file' : 'models/sotu-gwbush-vocab.json',
+    #     'max_sequence_len' : 182
+    # },
+    # {
+    #     'model_name' : 'gwbush-4',
+    #     'model_file' : 'models/sotu-gwbush-model-4.h5',
     #     'vocab_file' : 'models/sotu-gwbush-vocab.json',
     #     'max_sequence_len' : 182
     # },
@@ -61,6 +73,12 @@ models_info = [
     #     'vocab_file' : 'models/sotu-obama-vocab.json',
     #     'max_sequence_len' : 132,
     # },
+    # {
+    #     'model_name' : 'obama-4',
+    #     'model_file' : 'models/sotu-obama-model-4.h5',
+    #     'vocab_file' : 'models/sotu-obama-vocab.json',
+    #     'max_sequence_len' : 132,
+    # },
     {
         'model_name' : 'trump-1',
         'model_file' : 'models/sotu-trump-model-1.h5',
@@ -76,6 +94,12 @@ models_info = [
     # {
     #     'model_name' : 'trump-3',
     #     'model_file' : 'models/sotu-trump-model-3.h5',
+    #     'vocab_file' : 'models/sotu-trump-vocab.json',
+    #     'max_sequence_len' : 159
+    # },
+    # {
+    #     'model_name' : 'trump-4',
+    #     'model_file' : 'models/sotu-trump-model-4.h5',
     #     'vocab_file' : 'models/sotu-trump-vocab.json',
     #     'max_sequence_len' : 159
     # },
@@ -97,7 +121,12 @@ models_info = [
     #     'vocab_file' : 'models/sotu-last4-vocab.json',
     #     'max_sequence_len' : 284
     # },
-
+    # {
+    #     'model_name' : 'last4-4',
+    #     'model_file' : 'models/sotu-last4-model-4.h5',
+    #     'vocab_file' : 'models/sotu-last4-vocab.json',
+    #     'max_sequence_len' : 284
+    # },
 ]
 
 ## --- end config ----

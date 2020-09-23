@@ -3,6 +3,9 @@
 .DS_Store
 model.png
 
+# model files
+*.h5
+
 model-checkpoints
 
 # python

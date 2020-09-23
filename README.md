@@ -9,6 +9,8 @@ We have 5 language models
 - Trump
 - All of it (last4)
 
+All models are stored [here](https://drive.google.com/drive/folders/1U81aILv9r77lOVKGW5IEpFv-Ix_c8cZl)
+
 See below for notes.
 
 [README-dev.md](README-dev.md) has more developer notes
@@ -75,13 +77,14 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
 
 ```
 
-| Data    | Number of parameters | Total Epochs before early stopping | Accuracy % | Training Time                      |
-|---------|----------------------|------------------------------------|------------|------------------------------------|
-| Clinton | 1,120,934            | 130                                | 92.12      | 1 hour, 57 minutes and 48 secs     |
-| GWBush  | 1,161,009            | 109                                | 96.96      | 1 hour, 2 minutes and 22 seconds   |
-| Obama   | 1,219,633            | 146                                | 89.15      | 1 hour, 19 minutes and 48 seconds  |
-| Trump   | 894,911              | 90                                 | 94.41      | 22 minutes and 11.32 seconds       |
-| all     | 2,130,366            | 99                                 | 63.70      | 4 hours, 48 minutes and 30 seconds |
+| Data    | Parameters | Model Size | Epochs  | Accuracy % | Training Time                      |
+|---------|----------------------|------------|----------------|------------|------------------------------------|
+| Clinton | 1,120,934            | 13.5 MB    | 130            | 92.12      | 1 hour, 57 minutes and 48 secs     |
+| GWBush  | 1,161,009            | 14.0 MB    | 109            | 96.96      | 1 hour, 2 minutes and 22 seconds   |
+| Obama   | 1,219,633            | 14.7 MB    | 146            | 89.15      | 1 hour, 19 minutes and 48 seconds  |
+| Trump   | 894,911              | 10.8 MB    | 90             | 94.41      | 22 minutes and 11.32 seconds       |
+| all     | 2,130,366            | 25.6 MB    | 99             | 63.70      | 4 hours, 48 minutes and 30 seconds |
+
 
 <img src="plots/sotu-clinton-1.png" style="width:40%;" />
 <img src="plots/sotu-gwbush-1.png" style="width:40%;" />
@@ -113,13 +116,13 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
 
 ```
 
-| Data    | Number of parameters | Total Epochs before early stopping | Accuracy % | Training Time                                    |
-|---------|----------------------|------------------------------------|------------|--------------------------------------------------|
-| Clinton | 1,219,750            | 148                                | 91.35      | 3 hours, 21 minutes and 25.89 seconds            |
-| GWBush  | 1,259,825            | 129                                | 94.72      | 1 hour, 38 minutes and 45.70 seconds             |
-| Obama   | 1,318,449            | 165                                | 87.41      | 2 hours, 19 minutes and 3.25 seconds             |
-| Trump   | 993,727              | 136                                | 93.24      | 51 minutes and 54.15 seconds                     |
-| all     | 2,229,182            | 100                                | 59.06      | 7 hours, 34 minutes and 17.98 seconds            |
+| Data    | Parameters | Model Size | Epochs  | Accuracy % | Training Time                         |
+|---------|----------------------|------------|----------------|------------|---------------------------------------|
+| Clinton | 1,219,750            | 14.7 MB    | 148            | 91.35      | 3 hours, 21 minutes and 25.89 seconds |
+| GWBush  | 1,259,825            | 12.2 MB    | 129            | 94.72      | 1 hour, 38 minutes and 45.70 seconds  |
+| Obama   | 1,318,449            | 15.9 MB    | 165            | 87.41      | 2 hours, 19 minutes and 3.25 seconds  |
+| Trump   | 993,727              | 12.0 MB    | 136            | 93.24      | 51 minutes and 54.15 seconds          |
+| all     | 2,229,182            | 26.8 MB    | 100            | 59.06      | 7 hours, 34 minutes and 17.98 seconds |
 
 
 <img src="plots/sotu-clinton-2.png" style="width:40%;" />
@@ -153,13 +156,13 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
 
 ```
 
-| Data    | Number of parameters | Total Epochs before early stopping | Accuracy % | Training Time                         |
-|---------|----------------------|------------------------------------|------------|---------------------------------------|
-| Clinton | 1,219,750            | 176                                | 77.44      | 4 hours, 25 minutes and 0.92 seconds  |
-| GWBush  | 1,259,825            | 174                                | 81.99      | 2 hours, 18 minutes and 40.00 seconds |
-| Obama   | 1,318,449            | 152                                | 73.32      | 2 hours, 9 minutes and 36.04 seconds  |
-| Trump   | 993,727              | 158                                | 86.68      | 56 minutes and 41.30 seconds          |
-| all     | 2,229,182            | 117                                | 41.79      | 6 hours, 25 minutes and 27.42 seconds |
+| Data    | Parameters | Model Size | Epochs  | Accuracy % | Training Time                         |
+|---------|----------------------|------------|----------------|------------|---------------------------------------|
+| Clinton | 1,219,750            | 14.7 MB    | 176            | 77.44      | 4 hours, 25 minutes and 0.92 seconds  |
+| GWBush  | 1,259,825            | 15.2 MB    | 174            | 81.99      | 2 hours, 18 minutes and 40.00 seconds |
+| Obama   | 1,318,449            | 15.9 MB    | 152            | 73.32      | 2 hours, 9 minutes and 36.04 seconds  |
+| Trump   | 993,727              | 12.0 MB    | 158            | 86.68      | 56 minutes and 41.30 seconds          |
+| all     | 2,229,182            | 26.4 MB    | 117            | 41.79      | 6 hours, 25 minutes and 27.42 seconds |
 
 <img src="plots/sotu-clinton-3.png" style="width:40%;" />
 <img src="plots/sotu-gwbush-3.png" style="width:40%;" />
@@ -196,6 +199,15 @@ history = model.fit(xs, ys, validation_split=0.2, epochs=500,
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
+
+| Data    | Parameters | Model Size | Epochs | Accuracy % | Training Time                         |
+|---------|------------|------------|--------|------------|---------------------------------------|
+| Clinton | 11,389,627 | 136.7 MB   | 163    | 65.56      | 2 hours, 48 minutes and 30.75 seconds |
+| GWBush  | 12,221,101 | 146.7 MB   | 187    | 70.90      | 2 hours, 24 minutes and 30.99 seconds |
+| Obama   | 13,495,981 | 162.0 MB   | 182    | 64.46      | 2 hours, 27 minutes and 30.20 seconds |
+| Trump   | 7,258,199  | 87.2 MB    | 165    | 80.65      | 59 minutes and 38.71 seconds          |
+| all     | 41,723,279 | 500.7 MB   | 60     | 27.60      | 3 hours, 57 minutes and 24.50 seconds |
+
 
 <img src="plots/sotu-clinton-4.png" style="width:40%;" />
 <img src="plots/sotu-gwbush-4.png" style="width:40%;" />

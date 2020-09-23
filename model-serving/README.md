@@ -48,6 +48,12 @@ hostname : sotu.elephantscale.com
 
 ## Machine Setup
 
+Start from a Ubuntu 20.04 base
+
+Add ssh key for user ubuntu
+
+ssh -i key.pem   ubuntu@ip_address
+
 from https://docs.docker.com/engine/install/ubuntu/
 
 ```bash
@@ -110,3 +116,24 @@ Test it like this:
 
     $  ssh -T git@github.com
 ```
+
+### Scripts
+
+Copy `config/rc.local`  to `/etc/rc.local`
+
+```bash
+    $  sudo  cp config/rc.local  /etc/rc.local
+    $  sudo chmod 755 /etc/rc.local
+```
+
+Reboot every hour to cleanup  and refresh 
+
+```bash
+    $  sudo crontab -e
+
+    # and add the following
+
+    # m h  dom mon dow   command
+    59 * * * *    /sbin/shutdown -r 0
+```
+

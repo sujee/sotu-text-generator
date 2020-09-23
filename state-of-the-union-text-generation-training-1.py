@@ -273,15 +273,16 @@ def build_model(num_unique_words, max_sequence_len):
     from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional, Dropout
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.optimizers import Adam
+    from tensorflow.keras import regularizers
 
 
     ## model 1
-    # model_version = "1"
-    # model = Sequential([
-    #             Embedding(input_dim=num_unique_words, output_dim=100, input_length=max_sequence_len-1),
-    #             Bidirectional(LSTM(64)),
-    #             Dense(num_unique_words, activation='softmax')
-    #     ])
+    model_version = "1"
+    model = Sequential([
+                Embedding(input_dim=num_unique_words, output_dim=100, input_length=max_sequence_len-1),
+                Bidirectional(LSTM(64)),
+                Dense(num_unique_words, activation='softmax')
+        ])
 
     ## Model 2
     # model_version = "2"
@@ -293,25 +294,26 @@ def build_model(num_unique_words, max_sequence_len):
     #     ])
 
     ## Model 3
-    model_version = "3"
-    model = Sequential([
-                Embedding(input_dim=num_unique_words, output_dim=100, input_length=max_sequence_len-1),
-                Bidirectional(LSTM(64, return_sequences=True)),
-                Dropout(0.3),
-                Bidirectional(LSTM(64)),
-                Dense(num_unique_words, activation='softmax')
-        ])
-
-    ## Model 4
-    # model_version = "4"
+    # model_version = "3"
     # model = Sequential([
     #             Embedding(input_dim=num_unique_words, output_dim=100, input_length=max_sequence_len-1),
     #             Bidirectional(LSTM(64, return_sequences=True)),
-    #             Dropout (0.3),
+    #             Dropout(0.3),
     #             Bidirectional(LSTM(64)),
-    #             Dense(128, activation='relu'),
     #             Dense(num_unique_words, activation='softmax')
     #     ])
+
+    ## Model 4
+    ## Model 4: from https://github.com/lmoroney/dlaicourse/blob/master/TensorFlow%20In%20Practice/Course%203%20-%20NLP/NLP_Week4_Exercise_Shakespeare_Answer.ipynb
+    model_version = "4"
+    model = Sequential( [
+        Embedding(num_unique_words, 100, input_length=max_sequence_len-1),
+        Bidirectional(LSTM(150, return_sequences = True)),
+        Dropout(0.2),
+        LSTM(100),
+        Dense(num_unique_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
+        Dense(num_unique_words, activation='softmax')
+    ])
 
     model.compile(loss='categorical_crossentropy', 
                 optimizer = 'adam',
@@ -339,13 +341,13 @@ def train_model(model_name, model_version, model, xs, ys):
     os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
     cb_checkpoint = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  save_weights_only=True,
-                                                 verbose=2)
+                                                 verbose=1)
 
     ## train with validation
     t1 = time.perf_counter()
     history = model.fit(xs, ys, validation_split=0.2, 
                         epochs=500, verbose=2, 
-                        callbacks=[cb_tensorboard, cb_early_stop, cb_checkpoint])
+                        callbacks=[cb_tensorboard, cb_early_stop])
     t2 = time.perf_counter()
 
     print ("*** training done in {:,.1f} seconds or  {}".format ((t2-t1), 
