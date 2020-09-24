@@ -31,7 +31,7 @@
         <label for="title">Starter text</label>
         <input type="text" name="seed_text"
                placeholder="Seed text" class="form-control"
-               value="{{ request.form['seed_text'] }}"></input>
+               value="{{ request.form['seed_text'] | default ('american workers') }}"></input>
                <!-- TODO default value is 'hello' -->
     </div>
 
@@ -39,7 +39,7 @@
         <label for="content">Number of words</label>
         <input type="text" name="num_words"
                placeholder="20" class="form-control"
-               value="{{ request.form['num_words'] }}"></input>
+               value="{{ request.form['num_words'] | default("20") }}"></input>
                <!-- TODO default value is 10 -->
     </div>
 
