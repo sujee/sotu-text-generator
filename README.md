@@ -2,13 +2,24 @@
 
 ## About
 
-**Write your own state of the union speech**
-
 I trained models on past state of the union speech texts from various presidents (Clinton, GW Bush, Obama, Trump). Then I gave the models 'a starter text' (seed input) and asked them generate text.
 
-See some fun examples
+### Fun examples
+
+For the seed text of `american workers` here are the outputs from various models
+
+- **clinton-1**: `american workers` cuts the deficit is not enough we should be time to the senate to approave start to eliminate weapons
+
+- **gwbush-1**: `american workers` make right energy to our high we have seen for battle we citizens in this chamber to win the war
+
+- **obama-1**: `american workers` are american diplomacy backed by hard work and american people can be in this moment is real to end
+
+- **trump-1**: `american workers` and american families are left to the united states reciprocal trade act so that our country look at standing
+
 
 [screenshot-1](media/sotu-demo-1.png)  •  [screenshot-2](media/sotu-demo-2.png)
+
+It's fun to watch the themes of each generated text!
 
 ## Models
 
