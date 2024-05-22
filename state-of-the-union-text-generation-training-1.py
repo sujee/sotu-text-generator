@@ -305,15 +305,15 @@ def build_model(num_unique_words, max_sequence_len):
 
     ## Model 4
     ## Model 4: from https://github.com/lmoroney/dlaicourse/blob/master/TensorFlow%20In%20Practice/Course%203%20-%20NLP/NLP_Week4_Exercise_Shakespeare_Answer.ipynb
-    model_version = "4"
-    model = Sequential( [
-        Embedding(num_unique_words, 100, input_length=max_sequence_len-1),
-        Bidirectional(LSTM(150, return_sequences = True)),
-        Dropout(0.2),
-        LSTM(100),
-        Dense(num_unique_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
-        Dense(num_unique_words, activation='softmax')
-    ])
+    # model_version = "4"
+    # model = Sequential( [
+    #     Embedding(num_unique_words, 100, input_length=max_sequence_len-1),
+    #     Bidirectional(LSTM(150, return_sequences = True)),
+    #     Dropout(0.2),
+    #     LSTM(100),
+    #     Dense(num_unique_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
+    #     Dense(num_unique_words, activation='softmax')
+    # ])
 
     model.compile(loss='categorical_crossentropy', 
                 optimizer = 'adam',

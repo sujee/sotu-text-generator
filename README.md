@@ -1,17 +1,31 @@
 # SOTU Text Generation
 
-We have trained models on SOTU texts and then they can generate texts.
+## About
+
+**Write your own state of the union speech**
+
+I trained models on past state of the union speech texts from various presidents (Clinton, GW Bush, Obama, Trump). Then I gave the models 'a starter text' (seed input) and asked them generate text.
+
+See some fun examples
+
+[screenshot-1](media/sotu-demo-1.png)  •  [screenshot-2](media/sotu-demo-2.png)
+
+## Models
+
+We have trained models on past SOTU texts.  Models are bidirectional LSTM.
+
+[model architecture](media/model.png)
 
 We have 5 language models
+
 - Clinton
 - GWBush
 - Obama
 - Trump
 - All of it (last4)
 
-All models are stored [here](https://drive.google.com/drive/folders/1U81aILv9r77lOVKGW5IEpFv-Ix_c8cZl)
+Model files are [here](models/)
 
-See below for notes.
 
 [README-dev.md](README-dev.md) has more developer notes
 
@@ -36,10 +50,10 @@ A flask application in `model-serving` directory.  See [model-serving/README.md]
 
 ## Experimenting with Models
 
-I wanted to experiment with various models.  
+I wanted to experiment with various models.
 Pretty much all models overfit (large degree)
 
-### Data charecteristics
+### Data characteristics
 
 | Data    | Total number of words | Total unique words | max sequence len |
 |---------|-----------------------|--------------------|------------------|
@@ -52,7 +66,7 @@ Pretty much all models overfit (large degree)
 
 ### Model 1 - Smaller Model
 
-This model surprisingly works well.  
+This model surprisingly works well.
 And achieves pretty good training accuracy (around 90%) on most texts
 
 ```python
@@ -69,10 +83,10 @@ model.compile(loss='categorical_crossentropy',
               optimizer = 'adam',
               metrics=['accuracy'])
 
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy',
                           min_delta=0.01, patience=10, verbose=1)
 
-history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
+history = model.fit(xs, ys, validation_split=0.2, epochs=500,
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
@@ -104,14 +118,14 @@ model = Sequential([
             Dense(total_words, activation='softmax')
     ])
 
-model.compile(loss='categorical_crossentropy', 
+model.compile(loss='categorical_crossentropy',
               optimizer = 'adam',
               metrics=['accuracy'])
 
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy',
                         min_delta=0.05, patience=20, verbose=2)
 
-history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
+history = model.fit(xs, ys, validation_split=0.2, epochs=500,
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
@@ -144,14 +158,14 @@ model = Sequential([
             Dense(total_words, activation='softmax')
     ])
 
-model.compile(loss='categorical_crossentropy', 
+model.compile(loss='categorical_crossentropy',
               optimizer = 'adam',
               metrics=['accuracy'])
 
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy',
                         min_delta=0.05, patience=20, verbose=2)
 
-history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
+history = model.fit(xs, ys, validation_split=0.2, epochs=500,
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
@@ -188,14 +202,14 @@ from tensorflow.keras import regularizers
         Dense(num_unique_words/2, activation='relu', kernel_regularizer=regularizers.l2(0.01)),
         Dense(num_unique_words, activation='softmax')
     ])
-model.compile(loss='categorical_crossentropy', 
+model.compile(loss='categorical_crossentropy',
         optimizer = 'adam',
         # optimizer = Adam(lr=0.01)
         metrics=['accuracy'])
-cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy', 
+cb_early_stop = tf.keras.callbacks.EarlyStopping(monitor='accuracy',
                         min_delta=0.05, patience=20, verbose=2)
 
-history = model.fit(xs, ys, validation_split=0.2, epochs=500, 
+history = model.fit(xs, ys, validation_split=0.2, epochs=500,
                     verbose=1, callbacks=[tensorboard_callback, cb_early_stop])
 
 ```
